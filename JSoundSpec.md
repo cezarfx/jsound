@@ -6,6 +6,7 @@ Edition 0.1.3
 * Cezar Andrei cezar.andrei@oracle.com
 * Ghislain Fourny ghislain.fourny@28msec.com
 * Daniela Florescu dana.florescu@oracle.com
+
 Edited by Ghislain Fourny  28msec, Inc. ghislain.fourny@28msec.com
 
 <h6>Abstract</h6>
@@ -75,8 +76,6 @@ Index
 
 <h3>Chapter 1. Introduction</h3>
 
-1.1. Requirements
-
 Over the past decade, the need for more flexible and scalable databases has greatly increased. The NoSQL universe brings many new ideas on how to build both scalable data storage and scalable computing infrastructures.
 
 XML and JSON are probably the most popular two data formats that emerged. While XML reached a level of maturity that gives it an enterprise-ready status, JSON databases are still in their early stages. Scalable data stores (like MongoDB) are already available. JSONiq brings SQL-like query capabilities to JSON. The last missing piece for a full-fledged JSON database is a way to make sure that the data stored is consistent and sound. This is where schemas come into play.
@@ -99,19 +98,9 @@ The JSound schema definition language is based on the following requirements:
 <h3>Chapter 2. Concepts</h3>
 
 2.1. Candidate Instance
-2.2. Annotated Instance
-2.3. Schema Document
-2.4. Meta Schema Document
-2.5. Type
-2.6. Namespace
-2.7. Qualified Name
-2.8. Validation
-2.9. Annotation
-2.10. Meta Keys
-
-2.1. Candidate Instance
 
 This is a JDM (JSONiq Data Model) value. A Candidate Instance may or not be valid against a Schema Type.
+
 In the JSONiq Data Model, instances can be objects, arrays, or atomics.
 
  * An object has an unordered list of string/value pairs. A top-level object is also referred to as a "JSON document".
@@ -160,17 +149,13 @@ Annotation is the action of passing a Candidate Instance through a Schema Type (
  * casting an atomic to the current Schema Type. 
 
 Note that this action is independent of Validation: The two actions can be performed in tandem but they are not required. As the Validation action, the Annotation action takes a Candidate Instance, a Type (typically, a set of Schema Documents and the name of a Type defined in one of them) and results in a set of annotations on the Instance that describe the Types which the nested Instances match. This action also works on Instances that validate partially. When a Type cannot be found that matches a given nested Candidate Instance, a special annotation is used.
+
 2.10. Meta Keys
+
 Schema Documents mix keys that are describing actual data fields (actual keys) and keys that define the Types (meta keys). To make the distinction between the two, we use the $ (dollar sign) to represent the meta keys. In order to use $ in actual keys one should use the escaped version by doubling the $ character. This is consistent with other JSON meta languages.
 
-<h3>Chapter 3. Schema Documents</h3>
 
-3.1. Scope
-3.2. Schema Document properties
-3.3. Examples
-3.4. Type Names and references to Types
-3.5. Types
-3.6. Derived Type properties
+<h3>Chapter 3. Schema Documents</h3>
 
 3.1. Scope
 Schema Documents have a namespace and define multiple Types in this namespace.
@@ -187,8 +172,10 @@ Schema Documents are (serialized) JSON objects which have the following properti
  * $types (JSON array of objects representing Types) : the Types defined in this document. How these objects look like is explained in subsequent sections. 
 
 3.3. Examples
+
 This Schema Document defines two Atomic Types in the "http://www.example.com/my-schema" namespace and with the local names "small-number" and "big-number".
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -206,9 +193,11 @@ This Schema Document defines two Atomic Types in the "http://www.example.com/my-
     }
   ]
 }
+```
 
 This Schema Document defines one Object Type in the "http://www.example.com/my-new-schema" namespace named "small-and-big".
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-new-schema",
   "$imports" : [
@@ -228,20 +217,25 @@ This Schema Document defines one Object Type in the "http://www.example.com/my-n
     }
   ]
 }
+```
 
 Given this set of two Schema Documents, the following JSON object:
 
+```JSON
 {
   "small" : 4
 }
+```
 
 is valid against the Type named "Q{http://www.example.com/my-new-schema}small-and-big".
 This JSON object is not valid, because the value associated with "big" is not in the value space of the Type "Q{http://www.example.com/my-schema}big-number".
 
+```JSON
 {
   "small" : 4,
   "big" : 3
 }
+```
 
 3.4. Type Names and references to Types
 Type Names are Qualified Names, made of a namespace and of a local name, as described in the former chapter.
@@ -278,6 +272,7 @@ There are the following constraints on these properties:
 
 Here is an example of an invalid Schema Document, because it does not fulfill many of the above constraints.
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -312,12 +307,14 @@ Here is an example of an invalid Schema Document, because it does not fulfill ma
     }
   ]
 }
+```
 
 There are two facets common to all types:
 
  * $enumeration (array of JSON values): Constrains a value space to a specified set of values.
  * $constraints (array of JSON strings): Constrains a value space to the values for which a set of JSONiq queries evaluates to true. In these JSONiq queries, the context item is bound to the Serialized Instance being validated, after parsing. 
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -335,30 +332,37 @@ There are two facets common to all types:
     },
   ]
 }
+```
 
 The following JSON object is valid against Q{http://www.example.com/my-schema}two-objects.
 
+```JSON
 { "foo" : "bar" }
+```
 
 The following JSON array is valid against Q{http://www.example.com/my-schema}uniform-array.
 
+```JSON
 [ 42, 42, 42 ]
+```
+
 
 <h4>Chapter 4. Atomic Types</h4>
 
 4.1. Scope
-4.2. Examples
-4.3. Builtin Atomic Types
-4.4. Atomic facets
 
-4.1. Scope
 Atomic Types match atomics (JSON leaf values: strings, numbers, booleans, nulls).
 Atomic Types have a lexical space (a set of literals denoting the values), a value space (a set of actual values), and a lexical mapping which maps the former into the latter.
+
 An Atomic Type can be either the topmost atomic, or a primitive builtin type, or a builtin type derived from a primitive type, or a user-defined type derived from any other Atomic Type (except atomic).
+
 A Derived Atomic Type can be defined by restricting the value space of another Atomic Type by specifying atomic facets. A restriction can also be made with the general facets $enumeration and $constraints.
+
 4.2. Examples
+
 Given the following Schema Document:
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -383,12 +387,18 @@ Given the following Schema Document:
     }
   ]
 }
+```
 
 The strings "foo" and "bar" are valid against Type named "Q{http://www.example.com/my-schema}foo-and-bar". The string "foobar" and the array [ "foo", "bar" ] are not.
+
 The atomics (integers) 2 and 7 are valid against the Type named "Q{http://www.example.com/my-schema}digits". The string "2", the integer 0 and the array [ "foo", "bar" ] are not.
+
 The integer 4 is valid against the Type named "Q{http://www.example.com/my-schema}few-digits". The integer 2, the integer 0 and the array [ "foo", "bar" ] are not.
+
 4.3. Builtin Atomic Types
+
 A number of builtin Atomic Types are predefined. Most of them have counterparts in XML Schema 1.1, because they are very useful also in JSON (for example : dates, times, ...). In particular, they have the same value space, the same lexical space, the same lexical mapping and (for primitive types) the same associated set of atomic facets.
+
 Some of these builtin types are primitive and marked as such below. Others are derived from another builtin type.
 
  * string (primitive),
@@ -419,8 +429,11 @@ Some of these builtin types are primitive and marked as such below. Others are d
  * null (primitive), which has a singleton value space containing the JSON null value with the lexical representation "null". 
 
 There is also a special builtin type atomic, which is a supertype of all primitive types and, by transition, of all atomic types.
+
 The lexical namespace of dateTime as defined in XML Schema 1.1 is a superset of the date representation defined in ECMAScript. In addition, JSound extends the lexical representation of respectively date, time, dateTime defined above, to allow the format defined in RFC 2822 (nonterminals date, time, date-time respectively). This is because many JavaScript implementations do so.
+
 4.4. Atomic facets
+
 Restriction is done using the general facets, or the following atomic facets (they must be available for the base type).
 These facets are defined in XML Schema 1.1. For convenience, the summary from the XML Schema 1.1 specification is provided below. Which primitive type has which facets is defined in XML Schema 1.1 as well.
 The following atomic facets are available for the primitive types string, anyURI, base64Binary, hexBinary:
@@ -449,20 +462,20 @@ The following atomic facets are available for all primitive types (including boo
 
  * $pattern (string): Constraining a value space to values that are denoted by literals which match each of a set of regular expressions. 
 
+
 <h3>Chapter 5. Object Types</h3>
 
 5.1. Scope
-5.2. Examples
-5.3. Builtin Object Type
-5.4. Object facets
 
-5.1. Scope
 Object Types match objects.
 There is one builtin Object Type: "object" which is the direct base type of all other Object Types.
 An Object Type can be defined by restricting the value space of "object" by specifying a layout (type of the pairs, optional or not, ...). A restriction can also be made with the general Types facets $enumeration and $constraints.
+
 5.2. Examples
+
 Against the following Object Type:
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -491,17 +504,27 @@ Against the following Object Type:
     }
   ]
 }
+```
 
 The objects { "foo" : "bar" } and { "foo" : "foo" } are valid against the Type named "Q{http://www.example.com/my-schema}only-foo" because the foo pairs are strings.
+
 The object {} is not because the foo pair is missing.
+
 The object { "foo" : "bar", "bar" : "foo" } is not because no other pair than "foo" is allowed (closed Object Type).
+
 Against the Type named "Q{http://www.example.com/my-schema}only-foo":
+
 The objects { "foo" : "bar", "foobar" : [ "foo" ] } and { "foo" : "bar", "bar" : true } are valid because the foo pairs are strings, bar is optional and the Object Type is $open.
+
 The objects {} and { "bar" : "foo" } and { "foo" : "bar", "bar" : "foo" } are not because the foo pair is missing or the bar pair is not a boolean.
+
 5.3. Builtin Object Type
+
 There is one topmost, builtin Object Type named object, against which all objects are valid.
 This topmost type can be seen as having its $content facet as the empty object, and its $open facet as true.
+
 5.4. Object facets
+
 Restriction is done using the general facets, or the following object facets. For the moment, restriction can only be made on the topmost object type, but this will be relaxed later.
 
  * $content (object): the layout definition. Each pair in $content is called a field descriptor. The value in each field descriptor has the following properties.
@@ -517,6 +540,7 @@ Restriction is done using the general facets, or the following object facets. Fo
  * If it is set to false, an object $o is valid against the $open facet if all its keys appear in $content, or in the $content of a super type. 
 
 The object facets must fulfill the following consistency constraints against the super types (i.e., in the transitive closure of the $baseType relationship).
+
 These constraints make sure that the new value space is a subset of the base type's value space.
 
  * If the $baseType's $open property is false, then $open cannot be set back to true.
@@ -530,16 +554,15 @@ Note: since currently, the $baseType must be "object", these constraints are alw
 <h3>Chapter 6. Array Types</h3>
 
 6.1. Scope
-6.2. Examples
-6.3. Builtin Array Type
-6.4. Array facets
-
-6.1. Scope
 Array Types match arrays.
+
 There is one builtin topmost Array Type "array".
+
 An Array Type can be defined by restricting the value space of "array" by specifying a layout (type of the members) or size bounds. A restriction can also be made with the general Types facets $enumeration and $constraints.
+
 6.2. Examples
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -562,6 +585,7 @@ An Array Type can be defined by restricting the value space of "array" by specif
     }
   ]
 }
+```
 
 [ "foo " "bar" ] is valid against the Type named "Q{http://www.example.com/my-schema}strings" but not [ 1, 2, "foo" ].
 
@@ -570,9 +594,13 @@ An Array Type can be defined by restricting the value space of "array" by specif
 
 
 [ 1, 3, 5 ] is valid against the Type named "Q{http://www.example.com/my-schema}all-less-than-ten" but not [ 1, 3, 72 ].
+
 6.3. Builtin Array Type
+
 There is one topmost, builtin Array Type named array, against which all arrays are valid.
+
 6.4. Array facets
+
 Restriction is done using the general facets, or the following array facets.
 JSound supports the following array facets.
 
@@ -584,14 +612,13 @@ JSound supports the following array facets.
 <h3>Chapter 7. Union Types</h3>
 
 7.1. Scope
-7.2. Examples
-7.3. Union facets
 
-7.1. Scope
 The value space of a Union Type is the union of the value spaces of all its member types.
 There is no Builtin Union Type. All Union Types have directly the topmost "item" as their base type and restrict the value space by specifying the $content facet. General facets can also be used.
+
 7.2. Examples
 
+```JSON
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -608,10 +635,14 @@ There is no Builtin Union Type. All Union Types have directly the topmost "item"
     }
   ]
 }
+```
 
 "foo", "bar" and [ 1, 2, 3 ] are valid against the Type named "Q{http://www.example.com/my-schema}string-or-integer-array" but 3.14 and true are not.
+
 "foo", and [ 1, 2, 3, 4 ] are valid against the Type named "Q{http://www.example.com/my-schema}just-two" but [ 1 ] and "bar" are not.
+
 7.3. Union facets
+
 The specification of member types is done using one (compulsory) union facet, and optionally general facets.
 
  * $content (array of (string or object) ) : each member in the array is the name of a Type (Qualified Name in a string) or the member type itself (an object). 
@@ -620,12 +651,13 @@ The specification of member types is done using one (compulsory) union facet, an
 <h3>Chapter 8. Validation and Annotation</h3>
 
 8.1. Validation
+
+A Candidate Instance is valid against a Builtin Type if it is in its value space.
+
+A Candidate Instance is valid against a Derived Type if it is valid against its $baseType (recursively) and if it is valid against all facets.
+
 8.2. Annotation
 
-8.1. Validation
-A Candidate Instance is valid against a Builtin Type if it is in its value space.
-A Candidate Instance is valid against a Derived Type if it is valid against its $baseType (recursively) and if it is valid against all facets.
-8.2. Annotation
 A Candidate Instance is annotated against an Atomic Type as follows:
 
  * If it is valid against the Type (which implies that it is an atomic value), it is cast to the Atomic Type.
@@ -648,9 +680,11 @@ A Candidate Instance is annotated against a Union Type $t as follows:
  * If it is valid against the Type, then it is annotated against the first Type of $t."$content"() against which the Candidate Instance is valid.
  * Otherwise, it is replaced with an object with the fields $invalid (true), $expected (Union Type name), $value (the Candidate Instance) 
 
-Chapter 9. Schema of Schemas
+
+<h3>Chapter 9. Schema of Schemas</h3>
 
  
+```JSON
 {
   "$namespace" : "http://www.jsound.org/schemaschema",
   "$types" : [
@@ -801,42 +835,29 @@ Chapter 9. Schema of Schemas
     }
   ]
 }
+```
 
 
 <h3>Revision History</h3>
 
 Revision 0.1.3	Mon Jun 3, 2013	Ghislain Fourny
-
-Added constraints on $content and $open for objects, to ensure proper object-oriented inheritance. But for the moment, object derivation is limited to the topmost type, so that these constraints are trivially fulfilled.
-
-Fixed typos.
-
-Cleaned up Schema Schema.
+ * Added constraints on $content and $open for objects, to ensure proper object-oriented inheritance. But for the moment, object derivation is limited to the topmost type, so that these constraints are trivially fulfilled.
+ * Fixed typos.
+ * Cleaned up Schema Schema.
 
 Revision 0.1.2	Thu May 30 2013	Ghislain Fourny
-
-Annotating an atomic means casting it.
-
-The lexical space of date/dateTime/time was extended to support RFC 2822.
-
-Local types have no prefix.
-
-The URI Qualified Name syntax may also be used to reference types.
-
-$optional is ignored if a $default is provided for a pair.
-
-Added $about field to Schema and Types for free content.
-
-The Input of the Validation and Annotation processes is now a JDM instance (typically freshly parsed).
-
-$layout and $member-types were renamed to $content
-
-The special key $any was removed from object $content. JSONiq constraints can be used instead.
-
-Default values can be computed with a JSONiq query.
+ * Annotating an atomic means casting it.
+ * The lexical space of date/dateTime/time was extended to support RFC 2822.
+ * Local types have no prefix.
+ * The URI Qualified Name syntax may also be used to reference types.
+ * $optional is ignored if a $default is provided for a pair.
+ * Added $about field to Schema and Types for free content.
+ * The Input of the Validation and Annotation processes is now a JDM instance (typically freshly parsed).
+ * $layout and $member-types were renamed to $content
+ * The special key $any was removed from object $content. JSONiq constraints can be used instead.
+ * Default values can be computed with a JSONiq query.
 
 Revision 0.1.2	Wed May 29 2013	Ghislain Fourny
-
-First Working Draft.
+ * First Working Draft.
 
 <h3>Index</h3>
