@@ -161,8 +161,11 @@ Schema Documents mix keys that are describing actual data fields (actual keys) a
 <h3>Chapter 3. Schema Documents</h3>
 
 3.1. Scope
+
 Schema Documents have a namespace and define multiple Types in this namespace.
+
 3.2. Schema Document properties
+
 Schema Documents are (serialized) JSON objects which have the following properties
 
  * `$namespace` (JSON string): the namespace (URI) in which the types defined in this Schema Document live.
@@ -369,6 +372,7 @@ The following JSON array is valid against `"Q{http://www.example.com/my-schema}u
 4.1. Scope
 
 Atomic Types match atomics (JSON leaf values: strings, numbers, booleans, nulls).
+
 Atomic Types have a lexical space (a set of literals denoting the values), a value space (a set of actual values), and a lexical mapping which maps the former into the latter.
 
 An Atomic Type can be either the topmost atomic, or a primitive builtin type, or a builtin type derived from a primitive type, or a user-defined type derived from any other Atomic Type (except atomic).
@@ -418,36 +422,36 @@ A number of builtin Atomic Types are predefined. Most of them have counterparts 
 
 Some of these builtin types are primitive and marked as such below. Others are derived from another builtin type.
 
- * string (primitive),
- * anyURI (primitive),
- * base64Binary (primitive),
- * hexBinary (primitive).
- * date (primitive),
- * dateTime (primitive),
- * time (primitive),
- * dateTimeStamp (derived from dateTime),
- * gYear (primitive),
- * gYearMonth (primitive),
- * gMonth (primitive),
- * gMonthDay (primitive),
- * gDay (primitive),
- * duration (primitive),
- * dayTimeDuration (derived from duration),
- * yearMonthDuration (derived from duration),
- * decimal (primitive),
- * integer (derived from decimal),
- * long (derived from integer),
- * int (derived from long),
- * short (derived from int),
- * byte (derived from short),
- * double (primitive),
- * float (primitive).
- * boolean (primitive)
- * null (primitive), which has a singleton value space containing the JSON null value with the lexical representation `"null"`. 
+ * *string* (primitive),
+ * *anyURI* (primitive),
+ * *base64Binary* (primitive),
+ * *hexBinary* (primitive).
+ * *date* (primitive),
+ * *dateTime* (primitive),
+ * *time* (primitive),
+ * *dateTimeStamp* (derived from dateTime),
+ * *gYear* (primitive),
+ * *gYearMonth* (primitive),
+ * *gMonth* (primitive),
+ * *gMonthDay* (primitive),
+ * *gDay* (primitive),
+ * *duration* (primitive),
+ * *dayTimeDuration* (derived from duration),
+ * *yearMonthDuration* (derived from duration),
+ * *decimal* (primitive),
+ * *integer* (derived from decimal),
+ * *long* (derived from integer),
+ * *int* (derived from long),
+ * *short* (derived from int),
+ * *byte* (derived from short),
+ * *double* (primitive),
+ * *float* (primitive).
+ * *boolean* (primitive)
+ * *null* (primitive), which has a singleton value space containing the JSON null value with the lexical representation `"null"`. 
 
 There is also a special builtin type atomic, which is a supertype of all primitive types and, by transition, of all atomic types.
 
-The lexical namespace of dateTime as defined in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes) is a superset of the date representation defined in ECMAScript. In addition, JSound extends the lexical representation of respectively date, time, dateTime defined above, to allow the format defined in RFC 2822 (nonterminals date, time, date-time respectively). This is because many JavaScript implementations do so.
+The lexical namespace of dateTime as defined in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes) is a superset of the date representation defined in ECMAScript. In addition, JSound extends the lexical representation of respectively *date*, *time*, *dateTime* defined above, to allow the format defined in RFC 2822 (nonterminals *date*, *time*, *date-time* respectively). This is because many JavaScript implementations do so.
 
 4.4. Atomic facets
 
@@ -487,7 +491,9 @@ The following atomic facets are available for all primitive types (including boo
 5.1. Scope
 
 Object Types match objects.
+
 There is one builtin Object Type: `"object"` which is the direct base type of all other Object Types.
+
 An Object Type can be defined by restricting the value space of `"object"` by specifying a layout (type of the pairs, optional or not, ...). A restriction can also be made with the general Types facets `$enumeration` and `$constraints`.
 
 5.2. Examples
@@ -540,6 +546,7 @@ The objects `{}` and `{ "bar" : "foo" }` and `{ "foo" : "bar", "bar" : "foo" }` 
 5.3. Builtin Object Type
 
 There is one topmost, builtin Object Type named object, against which all objects are valid.
+
 This topmost type can be seen as having its `$content` facet as the empty object, and its `$open` facet as true.
 
 5.4. Object facets
@@ -616,16 +623,16 @@ An Array Type can be defined by restricting the value space of "array" by specif
 
 6.3. Builtin Array Type
 
-There is one topmost, builtin Array Type named array, against which all arrays are valid.
+There is one topmost, builtin Array Type named *array*, against which all arrays are valid.
 
 6.4. Array facets
 
 Restriction is done using the general facets, or the following array facets.
 JSound supports the following array facets.
 
- * `$content` (singleton array of one string or object) : the name of a Type (Qualified Name in a string) or the type itself (an object) that all members must match.
- * `$minLength` (integer) : the minimum length.
- * `$maxLength` (integer) : the maximum length. 
+ * `$content` (singleton *array* of one *string* or *object*) : the name of a Type (Qualified Name in a string) or the type itself (an object) that all members must match.
+ * `$minLength` (*integer*) : the minimum length.
+ * `$maxLength` (*integer*) : the maximum length. 
 
 
 <h3>Chapter 7. Union Types</h3>
@@ -633,6 +640,7 @@ JSound supports the following array facets.
 7.1. Scope
 
 The value space of a Union Type is the union of the value spaces of all its member types.
+
 There is no Builtin Union Type. All Union Types have directly the topmost `"item"` as their base type and restrict the value space by specifying the `$content` facet. General facets can also be used.
 
 7.2. Examples
