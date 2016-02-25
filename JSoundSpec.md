@@ -71,8 +71,11 @@ This document is a description of the JSound, the JSON schema definition languag
     8.2. Annotation
 
 9. Schema of Schemas
+
 A. Revision History
+
 Index
+
 
 <h3>Chapter 1. Introduction</h3>
 
@@ -238,19 +241,33 @@ This JSON object is not valid, because the value associated with "big" is not in
 ```
 
 3.4. Type Names and references to Types
+
 Type Names are Qualified Names, made of a namespace and of a local name, as described in the former chapter.
+
 Types names are used to (optionally) name Types, or to refer to another Type as a base type.
+
 References to Types that are defined in the same Schema Document can be referred to with no prefix as well: the namespace is that of the defining Schema Document. If there is a collision with Builtin Type names, the locally defined Type has precedence (the Builtin Type is hidden).
+
 3.5. Types
+
 There are four kinds of Types: atomic, object, array and union.
+
 Types are either Builtin, in which case their name is in no namespace, or Derived.
+
 The topmost Type is builtin and is named "item".
+
 The topmost Object Type is builtin and is named "object".
+
 The topmost Array Type is builtin and is named "array".
+
 The topmost Atomic Type is builtin and is named "atomic". There are many further Builtin Atomic Types.
+
 Derived Types are always defined by restricting the value space of a base type by means of facets. They have a JSON object representation.
+
 Derived Object Types are always directly derived from "object". Derived Array Types are always directly derived from "array". Derived Union Types are always directly derived from "item". Derived Atomic Types may be derived from any other Atomic Type.
+
 3.6. Derived Type properties
+
 A Derived Type has the following properties:
 
  * $kind (JSON string): the kind of the Type. One of "atomic, "object", "array", "union".
@@ -279,12 +296,12 @@ Here is an example of an invalid Schema Document, because it does not fulfill ma
     {
       "$kind" : "atomic",
       "$name" : "type1",
-      "$baseType" : "unbound:type", (: prefix is not bound :)
+      "$baseType" : "unbound:type", //(: prefix is not bound :)
       "$maxInclusive" : 4
     },
     {
       "$kind" : "atomic",
-      "$name" : "Q{http://www.example.com/other}type2", (: the namespace must match that of the Schema document :)
+      "$name" : "Q{http://www.example.com/other}type2", #(: the namespace must match that of the Schema document :)
       "$baseType" : "integer",
       "$maxInclusive" : 4
     },
@@ -389,11 +406,11 @@ Given the following Schema Document:
 }
 ```
 
-The strings "foo" and "bar" are valid against Type named "Q{http://www.example.com/my-schema}foo-and-bar". The string "foobar" and the array [ "foo", "bar" ] are not.
+The strings `"foo"` and `"bar"` are valid against Type named "Q{http://www.example.com/my-schema}foo-and-bar". The string `"foobar"` and the array `[ "foo", "bar" ]` are not.
 
-The atomics (integers) 2 and 7 are valid against the Type named "Q{http://www.example.com/my-schema}digits". The string "2", the integer 0 and the array [ "foo", "bar" ] are not.
+The atomics (integers) `2` and `7` are valid against the Type named "Q{http://www.example.com/my-schema}digits". The string `"2"`, the integer `0` and the array `[ "foo", "bar" ]` are not.
 
-The integer 4 is valid against the Type named "Q{http://www.example.com/my-schema}few-digits". The integer 2, the integer 0 and the array [ "foo", "bar" ] are not.
+The integer `4` is valid against the Type named "Q{http://www.example.com/my-schema}few-digits". The integer `2`, the integer `0` and the array `[ "foo", "bar" ]` are not.
 
 4.3. Builtin Atomic Types
 
@@ -498,25 +515,25 @@ Against the following Object Type:
         "bar" : {
          "$type" : "boolean",
          "$optional" : true
-       }
-     }
-    "$name" : "foo-bar-and-arrays"
+        }
+      },
+      "$name" : "foo-bar-and-arrays"
     }
   ]
 }
 ```
 
-The objects { "foo" : "bar" } and { "foo" : "foo" } are valid against the Type named "Q{http://www.example.com/my-schema}only-foo" because the foo pairs are strings.
+The objects `{ "foo" : "bar" }` and `{ "foo" : "foo" }` are valid against the Type named `"Q{http://www.example.com/my-schema}only-foo"` because the foo pairs are strings.
 
-The object {} is not because the foo pair is missing.
+The object `{}` is not because the foo pair is missing.
 
-The object { "foo" : "bar", "bar" : "foo" } is not because no other pair than "foo" is allowed (closed Object Type).
+The object `{ "foo" : "bar", "bar" : "foo" }` is not because no other pair than "foo" is allowed (closed Object Type).
 
-Against the Type named "Q{http://www.example.com/my-schema}only-foo":
+Against the Type named `"Q{http://www.example.com/my-schema}only-foo"`:
 
-The objects { "foo" : "bar", "foobar" : [ "foo" ] } and { "foo" : "bar", "bar" : true } are valid because the foo pairs are strings, bar is optional and the Object Type is $open.
+The objects `{ "foo" : "bar", "foobar" : [ "foo" ] }` and `{ "foo" : "bar", "bar" : true }` are valid because the foo pairs are strings, bar is optional and the Object Type is $open.
 
-The objects {} and { "bar" : "foo" } and { "foo" : "bar", "bar" : "foo" } are not because the foo pair is missing or the bar pair is not a boolean.
+The objects `{}` and `{ "bar" : "foo" }` and `{ "foo" : "bar", "bar" : "foo" }` are not because the foo pair is missing or the bar pair is not a boolean.
 
 5.3. Builtin Object Type
 
@@ -587,13 +604,13 @@ An Array Type can be defined by restricting the value space of "array" by specif
 }
 ```
 
-[ "foo " "bar" ] is valid against the Type named "Q{http://www.example.com/my-schema}strings" but not [ 1, 2, "foo" ].
+`[ "foo " "bar" ]` is valid against the Type named "Q{http://www.example.com/my-schema}strings" but not `[ 1, 2, "foo" ]`.
 
 
-[ "foo " "bar" ] is valid against the Type named "Q{http://www.example.com/my-schema}less-than-five-members" but not [ "foo", "foo", "foo", "foo", "foo", "foo" ].
+`[ "foo " "bar" ]` is valid against the Type named "Q{http://www.example.com/my-schema}less-than-five-members" but not `[ "foo", "foo", "foo", "foo", "foo", "foo" ]`.
 
 
-[ 1, 3, 5 ] is valid against the Type named "Q{http://www.example.com/my-schema}all-less-than-ten" but not [ 1, 3, 72 ].
+`[ 1, 3, 5 ]` is valid against the Type named "Q{http://www.example.com/my-schema}all-less-than-ten" but not `[ 1, 3, 72 ]`.
 
 6.3. Builtin Array Type
 
@@ -637,9 +654,9 @@ There is no Builtin Union Type. All Union Types have directly the topmost "item"
 }
 ```
 
-"foo", "bar" and [ 1, 2, 3 ] are valid against the Type named "Q{http://www.example.com/my-schema}string-or-integer-array" but 3.14 and true are not.
+`"foo"`, `"bar"` and `[ 1, 2, 3 ]` are valid against the Type named "Q{http://www.example.com/my-schema}string-or-integer-array" but `3.14` and true are not.
 
-"foo", and [ 1, 2, 3, 4 ] are valid against the Type named "Q{http://www.example.com/my-schema}just-two" but [ 1 ] and "bar" are not.
+`"foo"`, and `[ 1, 2, 3, 4 ]` are valid against the Type named "Q{http://www.example.com/my-schema}just-two" but `[ 1 ]` and `"bar"` are not.
 
 7.3. Union facets
 
