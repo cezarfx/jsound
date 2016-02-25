@@ -176,9 +176,9 @@ Schema Documents are (serialized) JSON objects which have the following properti
 
 3.3. Examples
 
-This Schema Document defines two Atomic Types in the "http://www.example.com/my-schema" namespace and with the local names "small-number" and "big-number".
+This Schema Document defines two Atomic Types in the `"http://www.example.com/my-schema"` namespace and with the local names `"small-number"` and `"big-number"`.
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -198,9 +198,9 @@ This Schema Document defines two Atomic Types in the "http://www.example.com/my-
 }
 ```
 
-This Schema Document defines one Object Type in the "http://www.example.com/my-new-schema" namespace named "small-and-big".
+This Schema Document defines one Object Type in the `"http://www.example.com/my-new-schema"` namespace named `"small-and-big"`.
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-new-schema",
   "$imports" : [
@@ -224,7 +224,7 @@ This Schema Document defines one Object Type in the "http://www.example.com/my-n
 
 Given this set of two Schema Documents, the following JSON object:
 
-```JSON
+```JSONIQ
 {
   "small" : 4
 }
@@ -233,7 +233,7 @@ Given this set of two Schema Documents, the following JSON object:
 is valid against the Type named `"Q{http://www.example.com/my-new-schema}small-and-big"`.
 This JSON object is not valid, because the value associated with "big" is not in the value space of the Type `"Q{http://www.example.com/my-schema}big-number"`.
 
-```JSON
+```JSONIQ
 {
   "small" : 4,
   "big" : 3
@@ -289,19 +289,19 @@ There are the following constraints on these properties:
 
 Here is an example of an invalid Schema Document, because it does not fulfill many of the above constraints.
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
     {
       "$kind" : "atomic",
       "$name" : "type1",
-      "$baseType" : "unbound:type", //(: prefix is not bound :)
+      "$baseType" : "unbound:type", (: prefix is not bound :)
       "$maxInclusive" : 4
     },
     {
       "$kind" : "atomic",
-      "$name" : "Q{http://www.example.com/other}type2", #(: the namespace must match that of the Schema document :)
+      "$name" : "Q{http://www.example.com/other}type2", (: the namespace must match that of the Schema document :)
       "$baseType" : "integer",
       "$maxInclusive" : 4
     },
@@ -331,7 +331,7 @@ There are two facets common to all types:
  * `$enumeration` (array of JSON values): Constrains a value space to a specified set of values.
  * `$constraints` (array of JSON strings): Constrains a value space to the values for which a set of JSONiq queries evaluates to true. In these JSONiq queries, the context item is bound to the Serialized Instance being validated, after parsing. 
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -353,13 +353,13 @@ There are two facets common to all types:
 
 The following JSON object is valid against Q{http://www.example.com/my-schema}two-objects.
 
-```JSON
+```JSONIQ
 { "foo" : "bar" }
 ```
 
 The following JSON array is valid against Q{http://www.example.com/my-schema}uniform-array.
 
-```JSON
+```JSONIQ
 [ 42, 42, 42 ]
 ```
 
@@ -379,7 +379,7 @@ A Derived Atomic Type can be defined by restricting the value space of another A
 
 Given the following Schema Document:
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -492,7 +492,7 @@ An Object Type can be defined by restricting the value space of `"object"` by sp
 
 Against the following Object Type:
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -579,7 +579,7 @@ An Array Type can be defined by restricting the value space of "array" by specif
 
 6.2. Examples
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -635,7 +635,7 @@ There is no Builtin Union Type. All Union Types have directly the topmost `"item
 
 7.2. Examples
 
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.example.com/my-schema",
   "$types" : [
@@ -701,7 +701,7 @@ A Candidate Instance is annotated against a Union Type `$t` as follows:
 <h3>Chapter 9. Schema of Schemas</h3>
 
  
-```JSON
+```JSONIQ
 {
   "$namespace" : "http://www.jsound.org/schemaschema",
   "$types" : [
