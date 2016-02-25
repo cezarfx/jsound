@@ -270,7 +270,7 @@ Derived Object Types are always directly derived from `"object"`. Derived Array 
 
 A Derived Type has the following properties:
 
- * `$kind` (JSON string): the kind of the Type. One of "atomic, "object", "array", "union".
+ * `$kind` (JSON string): the kind of the Type. One of "atomic, `"object"`, `"array"`, `"union"`.
  * `$name` (JSON string): a string containing the Qualified Name (as defined above) of this Type.
  * `$baseType` (JSON string): a string containing the Qualified Name of the Type which is the base type of this Type.
  * `$about` (JSON value): free content (documentation, comments, ...).
@@ -351,13 +351,13 @@ There are two facets common to all types:
 }
 ```
 
-The following JSON object is valid against Q{http://www.example.com/my-schema}two-objects.
+The following JSON object is valid against `"Q{http://www.example.com/my-schema}two-objects"`.
 
 ```JSONIQ
 { "foo" : "bar" }
 ```
 
-The following JSON array is valid against Q{http://www.example.com/my-schema}uniform-array.
+The following JSON array is valid against `"Q{http://www.example.com/my-schema}uniform-array"`.
 
 ```JSONIQ
 [ 42, 42, 42 ]
@@ -414,7 +414,7 @@ The integer `4` is valid against the Type named `"Q{http://www.example.com/my-sc
 
 4.3. Builtin Atomic Types
 
-A number of builtin Atomic Types are predefined. Most of them have counterparts in XML Schema 1.1, because they are very useful also in JSON (for example : dates, times, ...). In particular, they have the same value space, the same lexical space, the same lexical mapping and (for primitive types) the same associated set of atomic facets.
+A number of builtin Atomic Types are predefined. Most of them have counterparts in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes), because they are very useful also in JSON (for example : dates, times, ...). In particular, they have the same value space, the same lexical space, the same lexical mapping and (for primitive types) the same associated set of atomic facets.
 
 Some of these builtin types are primitive and marked as such below. Others are derived from another builtin type.
 
@@ -447,12 +447,14 @@ Some of these builtin types are primitive and marked as such below. Others are d
 
 There is also a special builtin type atomic, which is a supertype of all primitive types and, by transition, of all atomic types.
 
-The lexical namespace of dateTime as defined in XML Schema 1.1 is a superset of the date representation defined in ECMAScript. In addition, JSound extends the lexical representation of respectively date, time, dateTime defined above, to allow the format defined in RFC 2822 (nonterminals date, time, date-time respectively). This is because many JavaScript implementations do so.
+The lexical namespace of dateTime as defined in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes) is a superset of the date representation defined in ECMAScript. In addition, JSound extends the lexical representation of respectively date, time, dateTime defined above, to allow the format defined in RFC 2822 (nonterminals date, time, date-time respectively). This is because many JavaScript implementations do so.
 
 4.4. Atomic facets
 
 Restriction is done using the general facets, or the following atomic facets (they must be available for the base type).
-These facets are defined in XML Schema 1.1. For convenience, the summary from the XML Schema 1.1 specification is provided below. Which primitive type has which facets is defined in XML Schema 1.1 as well.
+
+These facets are defined in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#rf-facets). For convenience, the summary from the [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-1/) specification is provided below. Which primitive type has which facets is defined in [XML Schema 1.1](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes) as well.
+
 The following atomic facets are available for the primitive types string, anyURI, base64Binary, hexBinary:
 
  * `$length` (integer): Constraining a value space to values with a specific number of units of length, where units of length varies depending on the base type.
